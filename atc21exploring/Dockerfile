@@ -9,4 +9,4 @@ RUN cd AutoTiering/linux-5.3.0-autotiering \
 RUN make olddefconfig \
     && make -j$(nproc) binrpm-pkg bindeb-pkg \
     && cp ../*.deb ~/rpmbuild/RPMS/x86_64/
-CMD [ "cmd" ]
+CMD [ "bash" ]
