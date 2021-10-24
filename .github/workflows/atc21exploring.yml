@@ -12,8 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - run: mkdir -p $(pwd)/artifacts
     - name: Build the Docker image
-      run: docker build -f Dockerfile -v artifacts:/root/rpmbuild/RPMS/x86_64 -t vtta/env:atc21exploring .
+      run: docker build -f Dockerfile -v $(pwd)/artifacts:/root/rpmbuild/RPMS/x86_64 -t vtta/env:atc21exploring .
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
