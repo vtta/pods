@@ -8,16 +8,31 @@ on:
     paths:
       - 'atc21exploring/*'
 jobs:
-  build:
+  docker:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - run: mkdir -p $(pwd)/artifacts
-    - name: Build the Docker image
-      run: docker build -f Dockerfile -v $(pwd)/artifacts:/root/rpmbuild/RPMS/x86_64 -t vtta/env:atc21exploring .
-    - name: Archive production artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: atc21exploring kernel packages
-        path: |
-          artifacts/*.{rpm, deb}
+      - uses: actions/checkout@v2
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: atc21exploring
+          push: true
+          tags: vtta/pods:atc21exploring
+      - run: |
+          mkdir -p $(pwd)/artifacts
+          docker run -v $(pwd)/artifacts:/artifacts --rm --it vtta/env:atc21exploring cp /root/rpmbuild/RPMS/x86_64/*.{rpm, deb} /artifacts
+      - 
+        name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: atc21exploring kernel packages
+          path: |
+            artifacts/*.{rpm, deb}    
