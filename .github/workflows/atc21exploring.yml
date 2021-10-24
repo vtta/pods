@@ -1,0 +1,24 @@
+name: atc21exploring kernel build
+
+on:
+  push:
+    paths:
+      - 'atc21exploring'
+  pull_request:
+    
+    paths:
+      - 'atc21exploring'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build -f Dockerfile -v artifacts:/root/rpmbuild/RPMS/x86_64 -t vtta/env:atc21exploring .
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: atc21exploring kernel packages
+        path: |
+          artifacts/*.{rpm, deb}
