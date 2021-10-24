@@ -3,12 +3,10 @@ name: atc21exploring kernel build
 on:
   push:
     paths:
-      - 'atc21exploring'
+      - 'atc21exploring/*'
   pull_request:
-    
     paths:
-      - 'atc21exploring'
-
+      - 'atc21exploring/*'
 jobs:
   build:
     runs-on: ubuntu-latest
